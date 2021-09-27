@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'package:face_net_authentication/pages/widgets/const.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:face_net_authentication/pages/models/user.model.dart';
 import 'package:face_net_authentication/pages/profile.dart';
@@ -47,7 +44,6 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
     var response = await http.post(
       Uri.parse("https://mapro.einnovention.tech/api/imageData"),
       body: {
-         
         "name": "$user",
         "imageData": " ${json.encode(predictedData)}",
       },
@@ -110,7 +106,7 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
             PersistentBottomSheetController bottomSheetController =
                 Scaffold.of(context)
                     .showBottomSheet((context) => signOutSheet(context));
-   
+
             bottomSheetController.closed.whenComplete(() => widget.reload());
           }
         } catch (e) {
@@ -150,6 +146,7 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
       ),
     );
   }
+
   signOutSheet(context) {
     return Container(
       padding: EdgeInsets.all(20),
@@ -160,7 +157,7 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
           widget.isLogin && predictedUser != null
               ? Container(
                   child: Text(
-                    'Welcome back, ' + predictedUser.user + '.',
+                    'Welcome back, ' + "${predictedUser.user.split(",")[0]}" + '.',
                     style: TextStyle(fontSize: 20),
                   ),
                 )
@@ -189,19 +186,19 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
                 SizedBox(height: 10),
                 widget.isLogin && predictedUser != null
                     ? AppButton(
-                        text: 'Check Out!',
-                        onPressed: () async{
-                         String id;
-                          for (final e in dataImages){
-                             print("id is:${e['id']}");
-                             id=e['id'];
-                             }
-                            var response = await http.get(
-      Uri.parse("https://mapro.einnovention.tech/api/signout/$id"),
-     
-    );
-    print("Data is: ${json.encode(response.body)}");
-     
+                        text: 'Check Out',
+                        onPressed: () async {
+                          String id= predictedUser.user.split(",")[1];
+                          // for (final e in dataImages) {
+                          //   print("id is:${e['id']}");
+                          //   id = e['id'];
+                          // }
+                          // print("id is: ${predictedUser.id}");
+                          var response = await http.get(
+                            Uri.parse(
+                                "https://mapro.einnovention.tech/api/signout/$id"),
+                          );
+                          print("response: ${response.body}");
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -232,7 +229,6 @@ class _CheckOutAuthActionButtonState extends State<CheckOutAuthActionButton> {
       ),
     );
   }
- 
 
   @override
   void dispose() {

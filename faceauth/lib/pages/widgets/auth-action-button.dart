@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'package:face_net_authentication/pages/widgets/const.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:face_net_authentication/pages/models/user.model.dart';
 import 'package:face_net_authentication/pages/profile.dart';
@@ -47,7 +44,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     var response = await http.post(
       Uri.parse("https://mapro.einnovention.tech/api/imageData"),
       body: {
-         
         "name": "$user",
         "imageData": " ${json.encode(predictedData)}",
       },
@@ -110,7 +106,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             PersistentBottomSheetController bottomSheetController =
                 Scaffold.of(context)
                     .showBottomSheet((context) => signSheet(context));
-   
+
             bottomSheetController.closed.whenComplete(() => widget.reload());
           }
         } catch (e) {
@@ -150,7 +146,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       ),
     );
   }
-  
 
   signSheet(context) {
     return Container(
@@ -162,7 +157,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           widget.isLogin && predictedUser != null
               ? Container(
                   child: Text(
-                    'Welcome back, ' + predictedUser.user + '.',
+                    'Welcome back, ' + "${predictedUser.user.split(",")[0]}" + '.',
                     style: TextStyle(fontSize: 20),
                   ),
                 )
@@ -192,19 +187,18 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                 widget.isLogin && predictedUser != null
                     ? AppButton(
                         text: 'Check In',
-                        onPressed: () async{
-                          String id;
-                           for (final e in dataImages){
-                             print("id is:${e['id']}");
-                             id=e['id'];
-                             }
-                         print("id is: ${predictedUser.id}");
-                            var response = await http.get(
-      Uri.parse("https://mapro.einnovention.tech/api/signin/$id"),
-    
-    
-    );
-      print("response: ${response.body}");
+                        onPressed: () async {
+                          String id= predictedUser.user.split(",")[1];
+                          // for (final e in dataImages) {
+                          //   print("id is:${e['id']}");
+                          //   id = e['id'];
+                          // }
+                          // print("id is: ${predictedUser.id}");
+                          var response = await http.get(
+                            Uri.parse(
+                                "https://mapro.einnovention.tech/api/signin/$id"),
+                          );
+                          print("response: ${response.body}");
                           Navigator.push(
                             context,
                             MaterialPageRoute(

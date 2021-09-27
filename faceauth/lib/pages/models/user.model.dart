@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class User {
   String user;
-  String id;
+  
 
-  User({@required this.user, @required String id});
+  User({@required this.user});
 
   static User fromDB(String dbuser) {
-    return new User(user: dbuser.split(",")[0], id: dbuser.split(",")[1]);
+    return new User(user: " $dbuser",);
   }
 }
